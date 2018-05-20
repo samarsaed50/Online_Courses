@@ -1,0 +1,28 @@
+<p id="notice"><%= notice %></p>
+<p>
+  <strong>Title:</strong>
+  <%= @course.title %>
+</p>
+<table>
+  <thead>
+  <th>Lectures:</th>
+  <th>Likes:</th>
+  <th>Dislikes:</th>
+  </thead>
+  <tbody>
+    <% @course.lectures.each do |lecture| %>
+      <tr>
+        <td><%= link_to lecture.title, lecture %></td>
+        <td><%= lecture.get_likes.size %> </td>
+        <td><%= lecture.get_dislikes.size  %></td>
+       </tr>
+     <% end %>  
+  </tbody>
+</table>
+<% if user_signed_in? %>
+<%if current_user.id === @course.user_id  %>
+<%= link_to 'New Lecture', new_lecture_path(:corse_id => @course.id) %>
+<%= link_to 'Edit', edit_course_path(@course) %> |
+<% end %>
+<% end %>
+<%= link_to 'Back', courses_path %>

@@ -1,0 +1,57 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @lecture.title %>
+</p>
+
+<p>
+  <strong>Content:</strong>
+  <%= @lecture.content.html_safe %>
+</p>
+
+<p>
+  <strong>Download Link:</strong>
+  <td><%= link_to "Download Lecture", @lecture.attachment_url %></td>
+</p>
+<p>
+<h4>Vote:</h4>
+Like:<%= link_to like_lecture_path(@lecture), method: :put do %>
+  <span><%= @lecture.get_likes.size %></span>
+         <% end %>
+
+      Dislike:<%= link_to dislike_lecture_path(@lecture), method: :put do %>
+             <span><%= @lecture.get_dislikes.size %></span>
+         <% end %>
+    </p> 
+    <p>
+ <h4>report:</h4>
+ <% if current_user.voted_up_on?(@lecture,:vote_scope => 'spam') %>
+          Unspam:<%= link_to unspam_lecture_path(@lecture), method: :put do %>
+            <span>Unspam:</span> 
+            <% end %>
+           <% else %>
+         Spam:<%= link_to spam_lecture_path(@lecture), method: :put do %>
+          <span>Spam:</span>    
+          <%end %>
+       <% end %>  
+       </p>     
+<% if @lecture.user_id === current_user.id || @lecture.course.user_id === current_user.id %>
+<%= link_to 'Edit', edit_lecture_path(@lecture) %> |
+<%= link_to 'Destroy', @lecture, method: :delete, data: { confirm: 'Are you sure?' } %>|
+<% end %>
+<%= link_to 'Back', @lecture.course %>
+<h4>Comments:</h4>
+<table>
+  <thead>
+  </thead>
+  <tbody>
+    <% @lecture.comments.each do |comment| %>
+      <tr>
+        <%= comment.user.email %>:
+        <%= comment.comment %><br/>
+       </tr>
+     <% end %> 
+  </tbody>
+</table>
+<%= link_to 'Add Comment', new_comment_path(:lec_id => @lecture.id) %>   
